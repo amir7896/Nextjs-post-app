@@ -1,6 +1,8 @@
 import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
 import { PrismaAdapter } from "@auth/prisma-adapter";
+import { Session } from "next-auth";
+
 import { db } from "@/db";
 
 const GITHUB_CLEINT_ID = process.env.GITHUB_CLIENT_ID;
@@ -25,9 +27,9 @@ export const {
   ],
   callbacks: {
     // Usually not needed fixing in nextauth in future
-    async session({ session, user }: any) {
-      if (session && user) {
-        session.user.id = user.id;
+    async session({ session }: { session: Session }) {
+      if (session.user) {
+        session.user.id = session.user.id; // This line is redundant, just an example
       }
 
       return session;
